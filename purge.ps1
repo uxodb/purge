@@ -3,7 +3,6 @@ $lspath = "\\share\dfs\map"
 #########
 $logpath = "$lspath\Logfiles\purge.log"
 $files = Get-ChildItem $lspath -File
-$date = Get-Date
 $i = 0;
 if ([System.IO.File]::Exists($logpath) -and (Get-Item $logpath).Length/1MB -gt "99") {
     $logcount = [System.IO.Directory]::GetFiles("$lspath\Logfiles\", "purge*").Count
@@ -17,8 +16,7 @@ Write-Output "-----------------" | Out-File $logpath -Append
 Write-Output (Get-Date -Format "dd/MM/yyyy HH:mm") | Out-File $logpath -Append
 Write-Output "-----------------" | Out-File $logpath -Append
 foreach ($file in $files) {       
-    $verschil = New-TimeSpan -Start $date -End $file.LastWriteTime 
-    if ($verschil.Days -lt "-730") {
+    if ((get-date).AddYears(-2) -gt $file.LastWriteTime) {
         $i++
         $filedate = $file.LastWriteTime | Get-Date -Format "dd-MM-yyyy"
         $filesize += $file.Length/1MB          
