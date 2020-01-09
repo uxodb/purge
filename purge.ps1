@@ -6,21 +6,21 @@ $files = Get-ChildItem $lspath -File
 $i = 0;
 if ([System.IO.File]::Exists($logpath) -and (Get-Item $logpath).Length/1MB -gt "99") {
     $logcount = [System.IO.Directory]::GetFiles("$lspath\Logfiles\", "purge*").Count
-    for ($f=0; $f -lt $logcount; $f++) {} 
+    for ($f=0; $f -lt $logcount; $f++) {}
     $newLog = "$logpath" + ".$f"
-    Rename-Item -Path $logpath -NewName $newLog        
+    Rename-Item -Path $logpath -NewName $newLog
 } elseif (![System.IO.File]::Exists($logpath)) {
     New-Item -Path $logpath -ItemType "file" -Force
 }
 Write-Output "-----------------" | Out-File $logpath -Append
 Write-Output (Get-Date -Format "dd/MM/yyyy HH:mm") | Out-File $logpath -Append
 Write-Output "-----------------" | Out-File $logpath -Append
-foreach ($file in $files) {       
+foreach ($file in $files) {
     if ((get-date).AddYears(-2) -gt $file.LastWriteTime) {
         $i++
         $filedate = $file.LastWriteTime | Get-Date -Format "dd-MM-yyyy"
-        $filesize += $file.Length/1MB          
-        rm $file.FullName          
+        $filesize += $file.Length/1MB
+        Remove-Item $file.FullName
         if (Test-Path $file.FullName) {
             [bool]$delcheck = 0
             Write-Output "$filedate | ERROR | $($file.FullName)" | Out-File $logpath -Append
@@ -28,7 +28,7 @@ foreach ($file in $files) {
             [bool]$delcheck = 1
             Write-Output "$filedate | Verwijderd | $($file.FullName)" | Out-File $logpath -Append
         }
-    } 
+    }
 }
 $filesize =  [math]::Round($filesize,2)
 $filecount = [System.IO.Directory]::GetFiles($lspath).Count
