@@ -1,2 +1,1 @@
-Purge script voor verwijderen van formulieren waarvan modify datum minimaal 2 jaar in het verleden ligt.  
-Script logt de aanpassingen in $lspath\Logfiles.
+This script iterates through all the files in $lspath assessing whether their modification date is at least 2 years in the past. If this condition is met, the script proceeds to remove these files. The script records its activities in $lspath\Logfiles\ and rotate the logfile when its size surpasses 99MB. Numeral suffixes are added to the out-of-rotation log files in the following format: purge.log.1 with the more recent of logs having a higher number. 

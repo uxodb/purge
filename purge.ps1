@@ -1,6 +1,17 @@
-######### Pad naar bestanden hieronder wijzigen (zonder backslash aan het eind)
+<#
+  .SYNOPSIS
+    Deletes files and documents with modify dates of 2> years in the past
+
+  .DESCRIPTION
+    This script iterates through all the files in $lspath assessing whether their modification date is at least 2 years in the past. If this condition is met, the script proceeds to remove these files. The script records its activities in $lspath\Logfiles\ and rotates the logfile when its size surpasses 99MB. Numeral suffixes are added to the out-of-rotation log files in the following format: purge.log.1 with the more recent of logs having a higher number.
+
+  .AUTHOR
+    uxodb
+#>
+
+# Path to files (no trailing backslash)
 $lspath = "\\share\dfs\map"
-#########
+
 $logpath = "$lspath\Logfiles\purge.log"
 $files = Get-ChildItem $lspath -File
 $i = 0;
@@ -26,20 +37,20 @@ foreach ($file in $files) {
             Write-Output "$filedate | ERROR | $($file.FullName)" | Out-File $logpath -Append
         } else {
             [bool]$delcheck = 1
-            Write-Output "$filedate | Verwijderd | $($file.FullName)" | Out-File $logpath -Append
+            Write-Output "$filedate | Deleted | $($file.FullName)" | Out-File $logpath -Append
         }
     }
 }
 $filesize =  [math]::Round($filesize,2)
 $filecount = [System.IO.Directory]::GetFiles($lspath).Count
 if ($i -eq "0") {
-    Write-Output "Geen te verwijderen bestanden" | Out-File $logpath -Append
-    Write-Output "Totaal aantal bestanden over: $filecount" | Out-File $logpath -Append
+    Write-Output "No files eligible for deletion" | Out-File $logpath -Append
+    Write-Output "Amount of files left: $filecount" | Out-File $logpath -Append
 } elseif ($i -gt "0" -and $delcheck) {
-    Write-Output "Aantal bestanden verwijderd: $i" | Out-File $logpath -Append
-    Write-Output "Totaal aantal bestanden over: $filecount" | Out-File $logpath -Append
-    Write-Output "Totale grootte verwijderde bestanden: $filesize MB " | Out-File $logpath -Append
+    Write-Output "Amount of files deleted: $i" | Out-File $logpath -Append
+    Write-Output "Amount of files left: $filecount" | Out-File $logpath -Append
+    Write-Output "Total size of deleted files: $filesize MB " | Out-File $logpath -Append
 } elseif ($i -gt "0" -and !$delcheck) {
-    Write-Output "Totaal aantal bestanden over: $filecount" | Out-File $logpath -Append
-    Write-Output "Aantal bestanden niet kunnen verwijderen: $i" | Out-File $logpath -Append
+    Write-Output "Amount of files left: $filecount" | Out-File $logpath -Append
+    Write-Output "Amount of failed deletions: $i" | Out-File $logpath -Append
 }
