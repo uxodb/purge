@@ -3,7 +3,11 @@
     Deletes files and documents with modify dates of 2> years in the past
 
   .DESCRIPTION
-    This script iterates through all the files in $lspath assessing whether their modification date is at least 2 years in the past. If this condition is met, the script proceeds to remove these files. The script records its activities in $lspath\Logfiles\ and rotates the logfile when its size surpasses 99MB. Numeral suffixes are added to the out-of-rotation log files in the following format: purge.log.1 with the more recent of logs having a higher number.
+    This script iterates through all the files in $lspath assessing whether their modification date is at least 2 years in the past
+If this condition is met, the script proceeds to remove these files. 
+The script records its activities in $lspath\Logfiles\ and rotates the logfile when its size surpasses 99MB. 
+Numeral suffixes are added to the out-of-rotation log files in the following format: purge.log.1 with the more recent of logs having
+ a higher number.
 
   .AUTHOR
     uxodb
