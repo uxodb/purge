@@ -33,6 +33,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run scriptanalyzer
+        shell: pwsh
         run: |
           Import-Module PSScriptAnalyzer
           Invoke-ScriptAnalyzer -Path *.ps1 -Recurse -Outvariable issues
